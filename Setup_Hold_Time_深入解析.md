@@ -60,7 +60,7 @@ Hold 規定你不能太早衝過頭干擾下一次比賽。
 
 ### 4. 常見誤區與觀念修正 (Debug Note)
 
-![Setup Slack Diagram](./assets/setup_slack.png)
+<img src="./assets/setup_slack.png" width="600" alt="Setup Slack Diagram">
 
 #### 1. Setup Time (建立時間) ❌ 這裡有一個致命缺失
 
@@ -88,7 +88,7 @@ $$T_{period} + Clock\_Skew - Data\_Delay - T_{setup} > 0$$
 
 > 💡 **結論**：Setup 就像「趕飛機」。你的公式算成了飛機已經起飛了你才出發。正確公式是：你有「起飛時間 + 航程時間 ($T_{period}$」這麼長的時間可以慢慢跑。
 
-![Hold Slack Diagram](./assets/hold_slack.png)
+<img src="./assets/hold_slack.png" width="600" alt="Hold Slack Diagram">
 
 #### 2. Hold Time (保持時間) ✅ 你的邏輯是正確的
 
