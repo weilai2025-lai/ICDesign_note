@@ -135,7 +135,7 @@ Hold time is checking if the data is too fast. The data must stay stable **after
 **For Setup Slack:** We have one full cycle. The equation is:
 $Slack = (T_{period} + T_{skew} - T_{setup}) - Data_{delay}$
 
-*(Note: $T_{skew} = T_{capture} - T_{launch}$)*
+(Note: $T_{skew} = T_{capture} - T_{launch}$)
 
 **For Hold Slack:**
 We look at the same edge. The equation is:
