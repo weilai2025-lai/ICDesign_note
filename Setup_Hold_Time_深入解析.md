@@ -58,6 +58,54 @@ Hold 規定你不能太早衝過頭干擾下一次比賽。
 
 ---
 
+### 4. 常見誤區與觀念修正 (Debug Note)
+
+![Setup Slack Diagram](./assets/setup_slack.png)
+
+#### 1. Setup Time (建立時間) ❌ 這裡有一個致命缺失
+
+**你的原始公式：**
+$$T_{clk\_b} - T_{setup} - T_{uncertainty} > T_{clk\_a} + T_{clk\to q} + T_{comb}$$
+*(移項後)：*
+$$Clock\_Skew - Data\_Delay - T_{setup} > 0$$
+
+🔴 **你的問題出在哪？**
+你漏掉了 **Clock Period ($T_{period}$)**。
+你把 Setup Check 當成了「同一個 Clock Edge」的檢查，但 Setup Check 是 **跨週期** 的。
+
+**為什麼這樣是錯的？**
+照你的公式：Clock_Skew (通常很小，甚至接近 0) 必須大於 Data_Delay (Logic 跑的時間，通常很長)。
+結果：如果不加 $T_{period}$，你的公式意思變成「資料必須在瞬間（甚至負時間）內跑完」，這在物理上是不可能的。除非你的 Logic Delay 是 0，否則這個不等式永遠不會成立，你的晶片永遠無法通過 Timing Check。
+
+**正確的物理意義：**
+Launch F/F 在 $t=0$ 發出資料。Capture F/F 是在 $t = T_{period}$ (下一個週期) 等待資料。
+所以你的「本錢」是 **一個週期的時間 ($T_{period}$)**，外加 Skew。
+
+✅ **修正後的公式：**
+$$T_{period} + T_{clk\_b} - T_{setup} > T_{clk\_a} + T_{clk\to q} + T_{comb}$$
+*(移項後)：*
+$$T_{period} + Clock\_Skew - Data\_Delay - T_{setup} > 0$$
+
+> 💡 **結論**：Setup 就像「趕飛機」。你的公式算成了飛機已經起飛了你才出發。正確公式是：你有「起飛時間 + 航程時間 ($T_{period}$」這麼長的時間可以慢慢跑。
+
+![Hold Slack Diagram](./assets/hold_slack.png)
+
+#### 2. Hold Time (保持時間) ✅ 你的邏輯是正確的
+
+**你的原始公式：**
+$$T_{clk\_a} + T_{clk\to q} + T_{comb} > T_{clk\_b} + T_{hold} + T_{uncertainty}$$
+*(移項後)：*
+$$Data\_Delay - Clock\_Skew - T_{hold} > 0$$
+
+🔵 **你的理解是對的！**
+為什麼這題你對了？因為 Hold Check 通常是檢查 **同一個 Clock Edge** (Launch @ $t=0$, Capture @ $t=0$)。
+我們要確保：新的資料不要跑得比時鐘訊號還快，導致它在當前週期就衝進去，蓋掉原本的資料。
+所以這裡不需要 $T_{period}$，純粹是 Delay 與 Skew 的比拚。
+
+> 💡 **小提醒**：雖然數學對了，但觀念描述上稍微修正一下：這不是指「下一筆 Transaction」，而是指「當前這個 Edge 觸發所發射的新資料」，不能跑太快去汙染到「當前這個 Edge 本來要鎖住的舊資料」。
+
+---
+
 ## Part 2: English Interview Simulation (Q&A)
 
 這部分是模擬外商 (Apple/NVIDIA/AMD) 面試時的對答。
