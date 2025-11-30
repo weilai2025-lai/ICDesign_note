@@ -112,58 +112,67 @@ $$Data\_Delay - Clock\_Skew - T_{hold} > 0$$
 
 ### Q1: Can you explain the difference between Setup time and Hold time?
 
-**Suggested Answer:**
+**Answer:**
+"Sure. Setup time is checking if the data is fast enough. The data must arrive **before** the clock edge. If it arrives too late, we cannot increase the clock frequency.
 
-"Sure.
+Hold time is checking if the data is too fast. The data must stay stable **after** the clock edge. If it changes too quickly, it will overwrite the old data. Also, Hold time does not depend on the clock frequency."
 
-**Setup time** is the minimum amount of time the data signal must be stable **before** the capturing clock edge arrives. If the data arrives too late, we get a setup violation. It effectively sets the maximum operating frequency of the chip.
-
-**Hold time**, on the other hand, is the minimum time the data must remain stable **after** the capturing clock edge. If the data changes too quickly and interferes with the current latching value, we get a hold violation. Unlike setup time, hold time is independent of the clock frequency."
+> **中文對照**：
+> Setup 是檢查資料夠不夠快。資料必須在 Clock Edge 之前到達。太慢就不能跑高頻。
+> Hold 是檢查資料是不是太快。資料必須在 Clock Edge 之後保持穩定。變太快會蓋掉舊資料。而且 Hold 跟頻率無關。
 
 ---
 
 ### Q2: Write down the equation for Setup and Hold slack. How does clock skew affect them?
 
-*(面試官通常會給你白板或共享螢幕)*
+> 💡 **Strategy**: 寫白板時，邊寫邊唸公式。解釋 Skew 時，用我們剛剛討論的「Capture Clock 遲到」的概念。
 
-**Suggested Answer:**
+**Simplified Answer:**
+*(Writing on the board)*
 
-"Let's define $T_{launch}$ and $T_{capture}$ as the clock insertion delays.
+"Let's say $T_{launch}$ and $T_{capture}$ are the clock delays.
 
-**For Setup Slack**, the equation is:
+**For Setup Slack:**
+We have one full cycle. The equation is:
+$$Slack = (T_{period} + Skew - T_{setup}) - Data\_Delay$$
+*(Note: Skew is $T_{capture} - T_{launch}$)*
 
-$$Slack_{setup} = (T_{period} + T_{capture} - T_{setup}) - (T_{launch} + T_{clk2q} + T_{comb})$$
+**For Hold Slack:**
+We look at the same edge. The equation is:
+$$Slack = Data\_Delay - (Skew + T_{hold})$$
 
-**For Hold Slack**, the equation is:
+**About Clock Skew:**
+If we have **Positive Skew**, it means the Capture Clock arrives late.
+- **For Setup**: It is good. Because the destination closes later, so we have more time to run.
+- **For Hold**: It is bad. Because the 'keep out' window moves to the right, so the data must wait longer to be safe."
 
-$$Slack_{hold} = (T_{launch} + T_{clk2q} + T_{comb}) - (T_{capture} + T_{hold})$$
-
-Regarding **Clock Skew** (defined as $T_{capture} - T_{launch}$):
-
-- A **positive skew** (where capture clock is later than launch clock) is **good for Setup** because it relaxes the required arrival time.
-- However, it is **bad for Hold** because it requires the data to be stable for a longer duration after the clock edge."
+> **中文對照**：
+> (寫公式...)
+> 關於 Skew：Positive Skew 代表 Capture Clock 遲到了。
+> 對 Setup 來說是好事，因為終點晚關門，我有更多時間跑。
+> 對 Hold 來說是壞事，因為禁區往右移了，資料必須等更久才安全。
 
 ---
 
 ### Q3: If you have a Setup violation, how do you fix it? What about Hold?
 
-**Suggested Answer:**
+> 💡 **Strategy**: 用 "Too slow / Make it faster" 和 "Too fast / Make it slower" 這種最直觀的對比。
 
-"**For Setup violations**, I can:
+**Simplified Answer:**
 
-1. Optimize the combinational logic (reduce logic levels).
-2. Upsize the driver cells to improve drive strength.
-3. Use lower threshold voltage (LVT) cells, which are faster but leakier.
-4. Pull in the launch clock or push out the capture clock (Useful Skew).
+"To fix **Setup violations**, it means the path is **too slow**. I need to make it **faster**.
+I usually do three things:
+1. Upsize cells to increase drive strength.
+2. Use LVT (Low Threshold Voltage) cells, which are faster.
+3. Or use Useful Skew to borrow time from the next stage.
 
-**For Hold violations**, I typically:
+To fix **Hold violations**, it means the path is **too fast**. I need to **slow it down**.
+I usually insert buffers into the data path to add delay.
+But I need to be careful not to add too much delay, or I might cause a Setup violation."
 
-1. Insert buffers or delay cells into the data path to slow it down.
-2. Downsize cells to increase delay (though less common for hold fixing).
-
-It's important to note that fixing hold usually adds delay, so we must be careful not to create a new setup violation."
-
----
+> **中文對照**：
+> 修 Setup，代表路徑太慢。我要讓它變快。我通常做三件事：1. 加大 Cell 推力。 2. 用 LVT Cell (比較快)。 3. 用 Useful Skew 借時間。
+> 修 Hold，代表路徑太快。我要讓它變慢。我通常插入 Buffer 來增加延遲。但我要小心不要加太多，不然會反而造成 Setup violation。
 
 ## 重點整理
 
