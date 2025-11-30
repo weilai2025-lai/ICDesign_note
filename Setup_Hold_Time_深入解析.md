@@ -139,7 +139,7 @@ $Slack = (T_{period} + T_{skew} - T_{setup}) - Data_{delay}$
 
 **For Hold Slack:**
 We look at the same edge. The equation is:
-$$Slack = Data\_Delay - (T_{skew} + T_{hold})$$
+$Slack = Data_delay - (T_{skew} + T_{hold})$
 
 **About Clock Skew:**
 If we have **Positive Skew**, it means the Capture Clock arrives late.
