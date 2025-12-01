@@ -67,7 +67,7 @@
 **你的原始公式：**
 $$T_{clk\_b} - T_{setup} - T_{uncertainty} > T_{clk\_a} + T_{clk\to q} + T_{comb}$$
 *(移項後)：*
-$$Clock\_Skew - Data\_Delay - T_{setup} > 0$$
+$$T_{skew} - Data_{delay} - T_{setup} > 0$$
 
 🔴 **你的問題出在哪？**
 你漏掉了 **Clock Period ($T_{period}$)**。
@@ -84,7 +84,7 @@ Launch F/F 在 $t=0$ 發出資料。Capture F/F 是在 $t = T_{period}$ (下一�
 ✅ **修正後的公式：**
 $$T_{period} + T_{clk\_b} - T_{setup} > T_{clk\_a} + T_{clk\to q} + T_{comb}$$
 *(移項後)：*
-$$T_{period} + Clock\_Skew - Data\_Delay - T_{setup} > 0$$
+$$T_{period} + T_{skew} - Data_{delay} - T_{setup} > 0$$
 
 > 💡 **結論**：Setup 就像「趕飛機」。你的公式算成了飛機已經起飛了你才出發。正確公式是：你有「起飛時間 + 航程時間 ($T_{period}$」這麼長的時間可以慢慢跑。
 
@@ -95,7 +95,7 @@ $$T_{period} + Clock\_Skew - Data\_Delay - T_{setup} > 0$$
 **你的原始公式：**
 $$T_{clk\_a} + T_{clk\to q} + T_{comb} > T_{clk\_b} + T_{hold} + T_{uncertainty}$$
 *(移項後)：*
-$$Data\_Delay - Clock\_Skew - T_{hold} > 0$$
+$$Data_{delay} - T_{skew} - T_{hold} > 0$$
 
 🔵 **你的理解是對的！**
 為什麼這題你對了？因為 Hold Check 通常是檢查 **同一個 Clock Edge** (Launch @ $t=0$, Capture @ $t=0$)。
