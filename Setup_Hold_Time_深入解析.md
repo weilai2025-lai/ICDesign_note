@@ -167,7 +167,11 @@ If we have **Positive Skew**, it means the Capture Clock arrives late.
 If it is a small violation during the physical design stage, I can:
 
 1. **Upsize cells** to increase drive strength.
-2. **Use LVT (Low Threshold Voltage) cells**, which are faster."
+2. **Use LVT (Low Threshold Voltage) cells**, which are faster.
+
+To fix **Hold violations**, it means the path is **too fast**. I need to **slow it down**.
+I usually insert buffers into the data path to add delay.
+But I need to be careful not to add too much delay, or I might cause a Setup violation."
 
 > **中文對照**：
 > 修 Setup violation，代表路徑太慢。如果 Violation 很大，我通常先看 RTL 設計：
@@ -177,6 +181,8 @@ If it is a small violation during the physical design stage, I can:
 > 如果是 Physical Design 階段的小 Violation，我可以：
 > 1. **加大 Cell 推力 (Upsize cells)**。
 > 2. **使用 LVT (Low Threshold Voltage) Cell**，比較快。
+>
+> 修 Hold，代表路徑太快。我要讓它變慢。我通常插入 Buffer 來增加延遲。但我要小心不要加太多，不然會反而造成 Setup violation。
 
 ## 重點整理
 
