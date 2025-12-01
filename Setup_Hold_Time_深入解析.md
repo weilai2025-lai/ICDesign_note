@@ -158,21 +158,25 @@ If we have **Positive Skew**, it means the Capture Clock arrives late.
 
 > 💡 **Strategy**: 用 "Too slow / Make it faster" 和 "Too fast / Make it slower" 這種最直觀的對比。
 
-**Simplified Answer:**
+**Answer:**
+"To fix **Setup violations**, it means the path is **too slow**. If the violation is large, I usually look at the RTL design first:
 
-"To fix **Setup violations**, it means the path is **too slow**. I need to make it **faster**.
-I usually do three things:
-1. Upsize cells to increase drive strength.
-2. Use LVT (Low Threshold Voltage) cells, which are faster.
-3. Or use Useful Skew to borrow time from the next stage.
+1. **Add Pipeline stages**: Break the long combinational logic into smaller stages.
+2. **Simplify Logic**: Rewrite the code to reduce logic levels.
 
-To fix **Hold violations**, it means the path is **too fast**. I need to **slow it down**.
-I usually insert buffers into the data path to add delay.
-But I need to be careful not to add too much delay, or I might cause a Setup violation."
+If it is a small violation during the physical design stage, I can:
+
+1. **Upsize cells** to increase drive strength.
+2. **Use LVT (Low Threshold Voltage) cells**, which are faster."
 
 > **中文對照**：
-> 修 Setup，代表路徑太慢。我要讓它變快。我通常做三件事：1. 加大 Cell 推力。 2. 用 LVT Cell (比較快)。 3. 用 Useful Skew 借時間。
-> 修 Hold，代表路徑太快。我要讓它變慢。我通常插入 Buffer 來增加延遲。但我要小心不要加太多，不然會反而造成 Setup violation。
+> 修 Setup violation，代表路徑太慢。如果 Violation 很大，我通常先看 RTL 設計：
+> 1. **加 Pipeline stages**：將長的組合邏輯切成更小的階段。
+> 2. **簡化邏輯 (Simplify Logic)**：重寫程式碼以減少邏輯層級。
+>
+> 如果是 Physical Design 階段的小 Violation，我可以：
+> 1. **加大 Cell 推力 (Upsize cells)**。
+> 2. **使用 LVT (Low Threshold Voltage) Cell**，比較快。
 
 ## 重點整理
 
